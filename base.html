@@ -1,0 +1,314 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}SecureShare{% endblock %}</title>
+    <style>
+      :root {
+        --bg: #0d1b2a;
+        --card: #132337;
+        --navy: #1e3a5f;
+        --accent: #3b82f6;
+        --green: #10b981;
+        --amber: #f59e0b;
+        --red: #ef4444;
+        --cyan: #06b6d4;
+        --white: #f1f5f9;
+        --muted: #94a3b8;
+        --border: #1e3a5f;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: "Segoe UI", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--white);
+        min-height: 100vh;
+      }
+      nav {
+        background: var(--card);
+        border-bottom: 1px solid var(--border);
+        padding: 0 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 60px;
+      }
+      .nav-brand {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--white);
+        text-decoration: none;
+      }
+      .nav-brand span {
+        color: var(--accent);
+      }
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        margin-left: 1.5rem;
+        font-size: 0.9rem;
+      }
+      .nav-links a:hover {
+        color: var(--white);
+      }
+      .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+      }
+      .card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+      }
+      .card-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+      }
+      .card-sub {
+        color: var(--muted);
+        font-size: 0.9rem;
+        margin-bottom: 1.5rem;
+      }
+      .form-group {
+        margin-bottom: 1.2rem;
+      }
+      label {
+        display: block;
+        font-size: 0.85rem;
+        color: var(--muted);
+        margin-bottom: 0.4rem;
+        font-weight: 500;
+      }
+      input[type="text"],
+      input[type="password"],
+      input[type="number"],
+      select {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        background: #0d1b2a;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        color: var(--white);
+        font-size: 0.95rem;
+        outline: none;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--accent);
+      }
+      .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 0.7rem 1.5rem;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        text-decoration: none;
+      }
+      .btn-primary {
+        background: var(--accent);
+        color: #fff;
+      }
+      .btn-success {
+        background: var(--green);
+        color: #fff;
+      }
+      .btn-danger {
+        background: var(--red);
+        color: #fff;
+      }
+      .btn-ghost {
+        background: transparent;
+        color: var(--muted);
+        border: 1px solid var(--border);
+      }
+      .btn-full {
+        width: 100%;
+        justify-content: center;
+        margin-top: 0.5rem;
+      }
+      .upload-area {
+        border: 2px dashed var(--border);
+        border-radius: 12px;
+        padding: 3rem;
+        text-align: center;
+        cursor: pointer;
+        position: relative;
+      }
+      .upload-area input[type="file"] {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        cursor: pointer;
+        width: 100%;
+        height: 100%;
+      }
+      .upload-icon {
+        font-size: 3rem;
+        margin-bottom: 0.8rem;
+      }
+      .upload-filename {
+        margin-top: 0.8rem;
+        color: var(--accent);
+        font-weight: 600;
+      }
+      .alert {
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+      }
+      .alert-error {
+        background: rgba(239, 68, 68, 0.15);
+        border: 1px solid var(--red);
+        color: #fca5a5;
+      }
+      .alert-success {
+        background: rgba(16, 185, 129, 0.15);
+        border: 1px solid var(--green);
+        color: #6ee7b7;
+      }
+      .badge {
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+      .badge-green {
+        background: rgba(16, 185, 129, 0.2);
+        color: var(--green);
+      }
+      .badge-amber {
+        background: rgba(245, 158, 11, 0.2);
+        color: var(--amber);
+      }
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 1rem;
+        margin: 1.2rem 0;
+      }
+      .stat {
+        background: #0d1b2a;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 1rem;
+        text-align: center;
+      }
+      .stat-val {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--accent);
+      }
+      .stat-lbl {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 2px;
+      }
+      .copy-box {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        background: #0d1b2a;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.5rem 0.8rem;
+      }
+      .copy-box input {
+        background: transparent;
+        border: none;
+        flex: 1;
+        color: var(--white);
+        font-size: 0.88rem;
+        outline: none;
+      }
+      .copy-btn {
+        background: var(--navy);
+        color: var(--muted);
+        border: none;
+        border-radius: 6px;
+        padding: 0.35rem 0.7rem;
+        cursor: pointer;
+        font-size: 0.8rem;
+      }
+      .copy-btn:hover {
+        background: var(--accent);
+        color: var(--white);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.88rem;
+      }
+      th {
+        color: var(--muted);
+        padding: 0.7rem 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border);
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+      td {
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid rgba(30, 58, 95, 0.5);
+        vertical-align: middle;
+      }
+      tr:hover td {
+        background: rgba(30, 58, 95, 0.2);
+      }
+      .sec-bar {
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+        border-radius: 8px;
+        padding: 0.7rem 1rem;
+        font-size: 0.85rem;
+        color: #6ee7b7;
+      }
+      footer {
+        text-align: center;
+        padding: 2rem;
+        color: var(--muted);
+        font-size: 0.82rem;
+        border-top: 1px solid var(--border);
+        margin-top: 3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a class="nav-brand" href="{{ url_for('index') }}"
+        >🔐 Secure<span>Share</span></a
+      >
+      <div class="nav-links">
+        <a href="{{ url_for('index') }}">Upload</a>
+        <a href="{{ url_for('dashboard') }}">Dashboard</a>
+      </div>
+    </nav>
+    <div class="container">
+      {% with msgs = get_flashed_messages(with_categories=true) %} {% for cat,
+      msg in msgs %}
+      <div class="alert alert-{{ cat }}">{{ msg }}</div>
+      {% endfor %} {% endwith %} {% block content %}{% endblock %}
+    </div>
+    <footer>
+      SecureShare &nbsp;|&nbsp; AES-256-CBC &nbsp;·&nbsp; Python Flask
+    </footer>
+  </body>
+</html>

@@ -1,0 +1,71 @@
+{% extends 'base.html' %} {% block title %}SecureShare — Share Link{% endblock
+%} {% block content %}
+<div class="card" style="text-align: center; padding: 2.5rem 2rem">
+  <div style="font-size: 3rem; margin-bottom: 0.8rem">✅</div>
+  <div class="card-title" style="color: #10b981">
+    File Encrypted & Uploaded!
+  </div>
+  <div style="color: var(--muted); margin: 0.4rem 0 1.5rem">
+    <strong style="color: var(--white)">{{ filename }}</strong> is encrypted and
+    ready to share.
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val">{{ file_size }}</div>
+      <div class="stat-lbl">File Size</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color: #f59e0b">{{ expiry_hours }}h</div>
+      <div class="stat-lbl">Expires In</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color: #06b6d4">
+        {{ max_downloads if max_downloads > 0 else '∞' }}
+      </div>
+      <div class="stat-lbl">Max Downloads</div>
+    </div>
+    <div class="stat">
+      <div
+        class="stat-val"
+        style="color:{{ '#10B981' if has_password else '#94A3B8' }};"
+      >
+        {{ '🔑 Yes' if has_password else '— No' }}
+      </div>
+      <div class="stat-lbl">Password</div>
+    </div>
+  </div>
+  <div style="text-align: left; margin: 1.5rem 0">
+    <label>🔗 Your Share Link:</label>
+    <div class="copy-box" style="margin-top: 0.5rem">
+      <input type="text" value="{{ share_link }}" id="shareLink" readonly />
+      <button class="copy-btn" onclick="copyLink()">📋 Copy</button>
+    </div>
+    <div style="font-size: 0.8rem; color: var(--muted); margin-top: 0.5rem">
+      Expires: {{ expires_at[:16].replace('T',' ') }} {% if has_password %} · 🔑
+      Password required{% endif %}
+    </div>
+  </div>
+  <div class="sec-bar" style="text-align: left; margin-bottom: 1.5rem">
+    🛡️ File is stored encrypted. Only the recipient with this link can download
+    it.
+  </div>
+  <div
+    style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap"
+  >
+    <a href="{{ url_for('index') }}" class="btn btn-primary"
+      >🔐 Upload Another</a
+    >
+    <a href="{{ url_for('dashboard') }}" class="btn btn-ghost">📊 Dashboard</a>
+  </div>
+</div>
+<script>
+  function copyLink() {
+    const input = document.getElementById("shareLink");
+    input.select();
+    document.execCommand("copy");
+    const btn = document.querySelector(".copy-btn");
+    btn.textContent = "✅ Copied!";
+    setTimeout(() => (btn.textContent = "📋 Copy"), 2000);
+  }
+</script>
+{% endblock %}

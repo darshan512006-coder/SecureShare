@@ -1,0 +1,79 @@
+{% extends 'base.html' %} {% block title %}SecureShare — Download{% endblock %}
+{% block content %}
+<div class="card" style="max-width: 580px; margin: 0 auto">
+  <div style="text-align: center; margin-bottom: 1.5rem">
+    <div style="font-size: 3rem">📥</div>
+    <div class="card-title">Secure Download</div>
+    <div style="color: var(--muted); font-size: 0.9rem">
+      This file was encrypted with AES-256-CBC
+    </div>
+  </div>
+  <div
+    style="
+      background: #0d1b2a;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      margin-bottom: 1.5rem;
+    "
+  >
+    <div style="font-size: 1.05rem; font-weight: 700; margin-bottom: 0.8rem">
+      📄 {{ file_info.name }}
+    </div>
+    <div
+      style="
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        font-size: 0.85rem;
+        color: var(--muted);
+      "
+    >
+      <div>
+        📦 Size: <span style="color: var(--white)">{{ file_info.size }}</span>
+      </div>
+      <div>
+        ⏱️ Expires in:
+        <span style="color: #f59e0b">{{ file_info.time_left }}</span>
+      </div>
+      <div>
+        ⬇️ Downloads left:
+        <span style="color: #06b6d4">{{ file_info.downloads_left }}</span>
+      </div>
+      <div>
+        🔑 Password:
+        <span
+          style="color:{{ '#10B981' if file_info.has_password else '#94A3B8' }};"
+          >{{ 'Required' if file_info.has_password else 'None' }}</span
+        >
+      </div>
+    </div>
+  </div>
+  {% if needs_password %}
+  <form method="POST">
+    <div class="form-group">
+      <label>🔑 Enter Password to Decrypt</label>
+      <input
+        type="password"
+        name="password"
+        placeholder="Enter file password"
+        required
+        autofocus
+      />
+    </div>
+    <button type="submit" class="btn btn-primary btn-full">
+      🔓 Decrypt & Download
+    </button>
+  </form>
+  {% else %}
+  <div class="sec-bar" style="margin-bottom: 1.2rem">
+    🛡️ File will be decrypted in-memory and served directly.
+  </div>
+  <form method="POST">
+    <button type="submit" class="btn btn-success btn-full">
+      ⬇️ Download File
+    </button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block title %}SecureShare — Error {{ code }}{%
+endblock %} {% block content %}
+<div
+  class="card"
+  style="
+    text-align: center;
+    padding: 3rem 2rem;
+    max-width: 500px;
+    margin: 2rem auto;
+  "
+>
+  <div style="font-size: 3.5rem; margin-bottom: 1rem">
+    {% if code == 404 %}🔍 {% elif code == 410 %}⌛ {% elif code == 403 %}🚫 {%
+    else %}⚠️ {% endif %}
+  </div>
+  <div
+    style="
+      font-size: 2rem;
+      font-weight: 700;
+      color: #ef4444;
+      margin-bottom: 0.5rem;
+    "
+  >
+    {{ code }}
+  </div>
+  <div style="color: var(--muted); margin-bottom: 1.5rem">{{ message }}</div>
+  <a href="{{ url_for('index') }}" class="btn btn-primary">🏠 Back to Home</a>
+</div>
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'base.html' %} {% block title %}SecureShare — Dashboard{% endblock %}
+{% block content %}
+<div class="card">
+  <div
+    style="
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    "
+  >
+    <div>
+      <div class="card-title">📊 File Dashboard</div>
+      <div class="card-sub">All active encrypted files.</div>
+    </div>
+    <a href="{{ url_for('index') }}" class="btn btn-primary"
+      >🔐 Upload New File</a
+    >
+  </div>
+  {% if files %}
+  <div style="overflow-x: auto">
+    <table>
+      <thead>
+        <tr>
+          <th>File</th>
+          <th>Size</th>
+          <th>Security</th>
+          <th>Expires</th>
+          <th>Downloads</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for f in files %}
+        <tr>
+          <td>
+            <div style="font-weight: 600">{{ f.name }}</div>
+            <div style="font-size: 0.75rem; color: var(--muted)">
+              {{ f.created_at }}
+            </div>
+          </td>
+          <td>{{ f.size }}</td>
+          <td>
+            <span class="badge badge-green">🔒 AES-256</span><br />
+            {% if f.has_password %}
+            <span class="badge badge-amber" style="margin-top: 4px"
+              >🔑 Password</span
+            >
+            {% endif %}
+          </td>
+          <td>
+            <div style="font-size: 0.85rem">{{ f.expires_at }}</div>
+            <div
+              style="font-size:.75rem;color:{% if f.hours_left < 6 %}#EF4444{% else %}var(--muted){% endif %};"
+            >
+              {{ f.hours_left }}h left
+            </div>
+          </td>
+          <td style="text-align: center">
+            <span style="font-weight: 700; color: #06b6d4"
+              >{{ f.download_count }}</span
+            >
+            <span style="color: var(--muted)"> / {{ f.max_downloads }}</span>
+          </td>
+          <td>
+            <div style="display: flex; gap: 0.4rem">
+              <button
+                onclick="copyUrl('{{ f.share_url }}')"
+                class="btn btn-ghost"
+                style="padding: 0.35rem 0.7rem; font-size: 0.8rem"
+              >
+                📋
+              </button>
+              <a
+                href="{{ f.share_url }}"
+                target="_blank"
+                class="btn btn-ghost"
+                style="padding: 0.35rem 0.7rem; font-size: 0.8rem"
+                >🔗</a
+              >
+              <form
+                method="POST"
+                action="{{ url_for('delete_file', file_id=f.id) }}"
+                onsubmit="return confirm('Delete this file?');"
+                style="display: inline"
+              >
+                <button
+                  type="submit"
+                  class="btn btn-danger"
+                  style="padding: 0.35rem 0.7rem; font-size: 0.8rem"
+                >
+                  🗑️
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div style="text-align: center; padding: 3rem; color: var(--muted)">
+    <div style="font-size: 3rem">📭</div>
+    <div>
+      No active files.
+      <a href="{{ url_for('index') }}" style="color: var(--accent)"
+        >Upload one!</a
+      >
+    </div>
+  </div>
+  {% endif %}
+</div>
+<script>
+  function copyUrl(url) {
+    navigator.clipboard.writeText(url).then(() => alert("Link copied!"));
+  }
+</script>
+{% endblock %}
